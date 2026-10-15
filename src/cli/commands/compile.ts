@@ -76,6 +76,24 @@ export async function compileCommand(specPath: string, options: CompileCommandOp
     if (artifacts.typeDefinitions) {
       artifactsTable.push(['TypeScript Types & Zod', 'types.ts, schemas.ts']);
     }
+    if (artifacts.openaiTools) {
+      artifactsTable.push([
+        'OpenAI Function Tools',
+        `${artifacts.openaiTools.length} tools -> openai-tools.json`
+      ]);
+    }
+    if (artifacts.geminiDeclarations) {
+      artifactsTable.push([
+        'Gemini Declarations',
+        `${artifacts.geminiDeclarations.length} functions -> gemini-tools.json`
+      ]);
+    }
+    if (artifacts.mcpTools) {
+      artifactsTable.push([
+        'MCP Server & Tools',
+        `${artifacts.mcpTools.length} tools -> mcp-tools.json, mcp-server.ts`
+      ]);
+    }
 
     console.log(pc.bold('\n Generated Artifacts:'));
     console.log(artifactsTable.toString());

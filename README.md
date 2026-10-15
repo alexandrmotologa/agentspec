@@ -34,11 +34,16 @@ AgentSpec compiles OpenAPI schemas into clean Claude tools and Bedrock Action Gr
 
 ## Key capabilities
 
-- **Multi-target compilation:** Generates Anthropic Claude tool definitions, AWS Bedrock Action Group schemas, AWS CDK TypeScript constructs, Terraform HCL resource blocks, and runtime Zod validation schemas.
+- **Multi-target compilation:** Generates Anthropic Claude tool definitions, OpenAI Function Calling schemas, Google Gemini Function Declarations, Model Context Protocol (MCP) tool sets, AWS Bedrock Action Group schemas, AWS CDK TypeScript constructs, Terraform HCL resource blocks, and runtime Zod validation schemas.
 - **Token pruning engine:** Removes redundant documentation strings, examples, titles, and internal vendor extensions while preserving schema constraints, reducing prompt token footprints by 40% to 60%.
 - **Local Bedrock Lambda fulfillment emulator:** Runs TypeScript and JavaScript Lambda handlers locally without AWS deployment. The emulator synthesizes authentic `messageVersion: "1.0"` event envelopes and records execution duration and console logs.
-- **Interactive browser studio:** Built-in web interface running on localhost for testing operations, inspecting parameter structures, and viewing real-time schema validation diagnostics.
+- **Autonomous zero-code mock mode:** Generates realistic, schema-valid synthetic mock responses directly from OpenAPI 3.0 response schemas when handler implementations are not yet written.
+- **Stateful multi-turn session persistence:** Tracks and accumulates `sessionAttributes` and `promptSessionAttributes` across multiple tool calls within an agent conversation.
+- **Breaking change detector:** Scans schema diffs to identify removed operations, newly introduced required parameters, altered data types, and deleted enum values before changes reach production agents.
+- **MCP stdio server bridge:** Exposes your local Lambda fulfillment handler as a native Model Context Protocol server over standard input and output.
+- **Interactive browser studio:** Built-in 3-column web interface running on localhost for inspecting endpoints, executing parameter payloads, and viewing real-time schema validation diagnostics.
 - **Automated boundary and fuzzing suite:** Generates baseline happy paths, type mismatch violations, missing required parameters, and enum boundary conditions to verify that Lambda handlers return proper HTTP 4xx errors instead of unhandled exceptions.
+- **Project scaffolder:** Bootstraps complete, production-ready TypeScript projects with pre-wired handlers, typed schemas, and configuration files via `agentspec init`.
 
 ---
 
@@ -130,6 +135,42 @@ agentspec test ./petstore.json --handler ./src/lambda.ts
 <p align="center">
   <img src="docs/images/agentspec_terminal.png?raw=true" alt="AgentSpec Fuzzing Test Matrix" width="100%" />
 </p>
+
+### 5. Run autonomous zero-code mock server
+
+Simulate complete agent tool calls before writing any handler code:
+
+```bash
+agentspec mock ./petstore.json --port 5005
+```
+
+The mock engine returns schema-valid synthetic mock data for every operation, allowing frontend and agent developers to build against the API contract immediately.
+
+### 6. Detect breaking schema changes
+
+Audit OpenAPI schema updates for breaking changes that break agent tool calling:
+
+```bash
+agentspec diff ./baseline-spec.json ./candidate-spec.json --fail-on-breaking
+```
+
+Detects removed operations, newly added required parameters, altered parameter data types, and deleted enum values.
+
+### 7. Run as Model Context Protocol (MCP) server
+
+Connect your Lambda fulfillment handler directly to Claude Desktop, Cursor, or any MCP client over standard I/O:
+
+```bash
+agentspec mcp ./petstore.json --handler ./src/lambda.ts
+```
+
+### 8. Scaffold a complete project
+
+Initialize a new project with pre-wired TypeScript handler, types, and npm scripts:
+
+```bash
+agentspec init --dir ./my-agent
+```
 
 ---
 
@@ -244,9 +285,13 @@ export const handler = async (event: BedrockLambdaEvent): Promise<BedrockLambdaR
 
 | Command | Arguments | Options | Description |
 | :--- | :--- | :--- | :--- |
-| `compile` | `<spec>` | `-t, --target <name>`, `-o, --output <dir>`, `-p, --prune`, `--minify`, `--action-group <name>`, `--lambda-arn <arn>` | Compiles OpenAPI schemas into Claude tools, Bedrock action groups, CDK, and Terraform definitions. |
+| `init` | `[spec]` | `-d, --dir <dir>`, `-n, --name <name>` | Scaffolds a complete TypeScript project with handler, types, and configs. |
+| `compile` | `<spec>` | `-t, --target <name>`, `-o, --output <dir>`, `-p, --prune`, `--minify`, `--action-group <name>`, `--lambda-arn <arn>` | Compiles OpenAPI schemas into Claude, OpenAI, Gemini, MCP, Bedrock, CDK, and Terraform definitions. |
 | `simulate` | `<spec>` | `-h, --handler <file>` (required), `-p, --port <port>`, `--host <host>`, `--action-group <name>` | Starts local fulfillment emulator and interactive testing studio at `/_studio`. |
+| `mock` | `<spec>` | `-p, --port <port>`, `--host <host>`, `--action-group <name>` | Starts autonomous mock server with schema-conforming synthetic responses (zero code). |
 | `test` | `<spec>` | `-h, --handler <file>` (required), `-n, --max-cases <n>`, `--op <id>`, `--llm <model>` | Runs automated schema boundary and fuzzing test cases against the local Lambda handler. |
+| `diff` | `<oldSpec> <newSpec>` | `--fail-on-breaking` | Detects breaking changes in OpenAPI specs that disrupt agent tool calling. |
+| `mcp` | `<spec>` | `-h, --handler <file>` (required) | Runs Model Context Protocol (MCP) server over standard I/O (stdio). |
 | `inspect` | `<spec>` | None | Analyzes OpenAPI operations, parameter complexity, and calculates token savings. |
 
 ---

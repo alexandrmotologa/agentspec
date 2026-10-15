@@ -8,6 +8,9 @@ import { ClaudeCompiler } from './claude-tools.js';
 import { BedrockCompiler } from './bedrock-action-group.js';
 import { TypeGenerator } from './typegen.js';
 import { TerraformGenerator } from './terraform-gen.js';
+import { OpenAICompiler } from './openai-tools.js';
+import { GeminiCompiler } from './gemini-tools.js';
+import { MCPServerGenerator } from './mcp-server.js';
 
 export class Compiler {
   /**
@@ -68,6 +71,19 @@ export class Compiler {
       artifacts.zodSchemas = types.zod;
     }
 
+    if (target === 'openai' || target === 'all') {
+      artifacts.openaiTools = OpenAICompiler.compile(processedSpec, { prune });
+    }
+
+    if (target === 'gemini' || target === 'all') {
+      artifacts.geminiDeclarations = GeminiCompiler.compile(processedSpec, { prune });
+    }
+
+    if (target === 'mcp' || target === 'all') {
+      artifacts.mcpTools = MCPServerGenerator.compileTools(processedSpec, { prune });
+      artifacts.mcpServerSnippet = MCPServerGenerator.generateServerCode(processedSpec);
+    }
+
     // Write to disk if outputDir is specified
     if (options.outputDir) {
       this.writeArtifacts(artifacts, options.outputDir, options.minify);
@@ -92,6 +108,30 @@ export class Compiler {
       const file = path.join(resolvedDir, 'claude-tools.json');
       fs.writeFileSync(file, JSON.stringify(artifacts.claudeTools, null, indent), 'utf8');
       writtenFiles.push(file);
+    }
+
+    if (artifacts.openaiTools) {
+      const file = path.join(resolvedDir, 'openai-tools.json');
+      fs.writeFileSync(file, JSON.stringify(artifacts.openaiTools, null, indent), 'utf8');
+      writtenFiles.push(file);
+    }
+
+    if (artifacts.geminiDeclarations) {
+      const file = path.join(resolvedDir, 'gemini-tools.json');
+      fs.writeFileSync(file, JSON.stringify(artifacts.geminiDeclarations, null, indent), 'utf8');
+      writtenFiles.push(file);
+    }
+
+    if (artifacts.mcpTools) {
+      const fileTools = path.join(resolvedDir, 'mcp-tools.json');
+      fs.writeFileSync(fileTools, JSON.stringify(artifacts.mcpTools, null, indent), 'utf8');
+      writtenFiles.push(fileTools);
+    }
+
+    if (artifacts.mcpServerSnippet) {
+      const fileServer = path.join(resolvedDir, 'mcp-server.ts');
+      fs.writeFileSync(fileServer, artifacts.mcpServerSnippet, 'utf8');
+      writtenFiles.push(fileServer);
     }
 
     if (artifacts.bedrockActionGroup) {
