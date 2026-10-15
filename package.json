@@ -1,0 +1,58 @@
+{
+  "name": "agentspec",
+  "version": "1.0.0",
+  "description": "OpenAPI to AWS Bedrock Action Group & Claude Tool compiler with local Lambda emulator and schema fuzzer",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "agentspec": "./bin/agentspec.js"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "openapi",
+    "swagger",
+    "aws-bedrock",
+    "bedrock-agent",
+    "action-group",
+    "claude",
+    "claude-tools",
+    "anthropic",
+    "lambda",
+    "emulator",
+    "fuzzer",
+    "schema-validation",
+    "typescript"
+  ],
+  "author": "Alexandr Motologa",
+  "license": "MIT",
+  "dependencies": {
+    "cli-table3": "^0.6.5",
+    "commander": "^13.1.0",
+    "picocolors": "^1.1.1",
+    "yaml": "^2.7.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/node": "^22.13.9",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3",
+    "vitest": "^5.0.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
