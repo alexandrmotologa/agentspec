@@ -2,6 +2,7 @@
   "name": "agentspec",
   "version": "1.0.0",
   "description": "OpenAPI to AWS Bedrock Action Group & Claude Tool compiler with local Lambda emulator and schema fuzzer",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {

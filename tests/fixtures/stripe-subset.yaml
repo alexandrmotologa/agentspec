@@ -1,0 +1,74 @@
+openapi: "3.0.1"
+info:
+  title: "Stripe Subset API"
+  version: "2024-06-20"
+  description: "Subset of Stripe payment intents and customers for AgentSpec testing"
+paths:
+  /v1/customers:
+    post:
+      summary: "Create customer"
+      operationId: "createCustomer"
+      description: "Creates a new customer object"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                name:
+                  type: string
+                phone:
+                  type: string
+      responses:
+        "200":
+          description: "Customer created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+    get:
+      summary: "List customers"
+      operationId: "listCustomers"
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: "List of customers"
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Customer"
+components:
+  schemas:
+    Customer:
+      type: object
+      required:
+        - id
+        - email
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        phone:
+          type: string
