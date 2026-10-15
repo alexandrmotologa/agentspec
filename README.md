@@ -124,6 +124,11 @@ curl -X POST http://localhost:5005/api/invoke \
   -d '{"operationId": "getPetById", "parameters": {"petId": 1}}'
 ```
 
+<p align="center">
+  <img src="docs/images/agentspec_studio.png?raw=true" alt="AgentSpec Studio - Interactive Local Fulfillment Sandbox" width="100%" />
+</p>
+
+
 ### 4. Run automated boundary and fuzzing tests
 
 Verify that your Lambda handler rejects invalid requests with proper HTTP 400 responses:

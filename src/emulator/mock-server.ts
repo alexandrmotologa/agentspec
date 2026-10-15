@@ -377,15 +377,15 @@ export class MockServer {
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
-  <header class="border-b border-slate-800 bg-slate-900/60 px-6 py-4 flex items-center justify-between">
+  <header class="border-b border-slate-800 bg-slate-900/60 px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
     <div class="flex items-center space-x-3">
       <div class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold text-lg">λ</div>
       <div>
-        <h1 class="font-bold text-lg text-white">AgentSpec Studio</h1>
-        <p class="text-xs text-slate-400">AWS Bedrock Lambda Fulfillment &amp; Multi-Model Contract Sandbox</p>
+        <h1 class="font-bold text-base sm:text-lg text-white">AgentSpec Studio</h1>
+        <p class="text-[11px] sm:text-xs text-slate-400">AWS Bedrock Lambda Fulfillment &amp; Multi-Model Contract Sandbox</p>
       </div>
     </div>
-    <div class="flex items-center space-x-4">
+    <div class="flex items-center space-x-3 sm:space-x-4">
       <span class="text-xs px-2.5 py-1 rounded-full ${
         isMock
           ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
@@ -398,9 +398,9 @@ export class MockServer {
     </div>
   </header>
 
-  <main class="flex-1 flex overflow-hidden">
+  <main class="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden">
     <!-- Sidebar: Operations -->
-    <aside class="w-72 border-r border-slate-800 bg-slate-950/40 p-4 overflow-y-auto flex flex-col gap-4">
+    <aside class="w-full lg:w-72 lg:max-w-xs border-b lg:border-b-0 lg:border-r border-slate-800 bg-slate-950/40 p-4 overflow-y-auto flex flex-col gap-4 max-h-64 lg:max-h-none flex-shrink-0">
       <!-- Session Box -->
       <div class="bg-slate-900/40 border border-slate-800 rounded-lg p-3">
         <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Active Session ID</label>
@@ -430,20 +430,20 @@ export class MockServer {
     </aside>
 
     <!-- Center: Invocation & Parameters -->
-    <section class="flex-1 flex flex-col p-6 overflow-y-auto">
+    <section class="flex-1 flex flex-col p-4 sm:p-6 overflow-y-auto">
       <div id="op-detail" class="space-y-6">
         <div>
           <div class="flex items-center gap-3">
             <span id="detail-method" class="text-xs font-bold px-2 py-1 rounded bg-blue-500/20 text-blue-400 uppercase">GET</span>
-            <h2 id="detail-id" class="text-xl font-bold text-white font-mono">Select an operation</h2>
+            <h2 id="detail-id" class="text-lg sm:text-xl font-bold text-white font-mono">Select an operation</h2>
           </div>
-          <p id="detail-desc" class="text-sm text-slate-400 mt-1">Select an operation from the sidebar to inspect parameters and test local fulfillment.</p>
+          <p id="detail-desc" class="text-xs sm:text-sm text-slate-400 mt-1">Select an operation from the sidebar to inspect parameters and test local fulfillment.</p>
         </div>
 
         <!-- 3-Column Inspection Grid -->
-        <div class="grid grid-cols-12 gap-5">
-          <!-- Column 1: Inputs (4 cols) -->
-          <div class="col-span-4 space-y-4">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          <!-- Column 1: Inputs (4 cols on lg) -->
+          <div class="col-span-1 lg:col-span-4 space-y-4">
             <div class="border border-slate-800 rounded-xl bg-slate-900/40 p-4">
               <h3 class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-3">Parameters</h3>
               <div id="params-form" class="space-y-3 text-xs">
@@ -461,20 +461,20 @@ export class MockServer {
             </button>
           </div>
 
-          <!-- Column 2: Synthesized Bedrock Event (4 cols) -->
-          <div class="col-span-4 border border-slate-800 rounded-xl bg-slate-900/40 p-4 flex flex-col h-full">
+          <!-- Column 2: Synthesized Bedrock Event (4 cols on lg) -->
+          <div class="col-span-1 lg:col-span-4 border border-slate-800 rounded-xl bg-slate-900/40 p-4 flex flex-col">
             <h3 class="text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Synthesized Bedrock Event</h3>
-            <pre id="event-box" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs font-mono text-cyan-300/90 overflow-x-auto whitespace-pre-wrap max-h-[460px]">Run invocation to synthesize event envelope</pre>
+            <pre id="event-box" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs font-mono text-cyan-300/90 overflow-x-auto whitespace-pre-wrap min-h-[160px] max-h-[460px]">Run invocation to synthesize event envelope</pre>
           </div>
 
-          <!-- Column 3: Output & Validation (4 cols) -->
-          <div class="col-span-4 border border-slate-800 rounded-xl bg-slate-900/40 p-4 flex flex-col h-full">
+          <!-- Column 3: Output & Validation (4 cols on lg) -->
+          <div class="col-span-1 lg:col-span-4 border border-slate-800 rounded-xl bg-slate-900/40 p-4 flex flex-col">
             <div class="flex items-center justify-between mb-2">
               <h3 class="text-xs font-semibold text-slate-300 uppercase tracking-wider">Lambda Output</h3>
               <div id="status-badge" class="hidden text-[11px] px-2 py-0.5 rounded font-mono font-medium"></div>
             </div>
             <div id="validation-box" class="hidden mb-2 p-2.5 rounded-lg text-xs font-mono border"></div>
-            <pre id="output-box" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-300 overflow-x-auto whitespace-pre-wrap max-h-[300px]">Run invocation to see output</pre>
+            <pre id="output-box" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs font-mono text-slate-300 overflow-x-auto whitespace-pre-wrap min-h-[160px] max-h-[300px]">Run invocation to see output</pre>
             <div class="mt-2 pt-2 border-t border-slate-800">
               <h4 class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">Session State</h4>
               <pre id="session-box" class="bg-slate-950 border border-slate-800 rounded-lg p-2 text-[10px] font-mono text-emerald-400 max-h-24 overflow-y-auto">No session state</pre>
